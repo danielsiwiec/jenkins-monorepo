@@ -4,9 +4,11 @@ node {
     checkout scm
     
     def analyzeChanges = load "$env.WORKSPACE/common/jenkins/analyzeChanges.groovy"
-    servicesToRun = analyzeChanges()
-    println(servicesToRun)
 
+    def servicesToRun = analyzeChanges()
+    
+    println('=========')
+    println("Running: $servicesToRun")
 
     stage('Build') {
         echo 'Building the service'
