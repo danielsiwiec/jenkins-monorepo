@@ -1,11 +1,22 @@
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
+def runServiceStep(service, command) {
+    dir("services/$service") {
+        sh "make $command"
+    }
+}
+
+def runCommonStep(command) {
+    sh "make $command"
+}
+
+
 def execute(step, services) {
   stage(step.name) {
     if (step.common) {
-        echo "Running make ${step.command}"
+        runCommonStep(step.command)
     } else {
-        parallel services.collectEntries {[it, {echo "Running make ${step.command}"}]}
+        parallel services.collectEntries {service -> [service, {runServiceStep(service, step.command)}]}
     }
   }
 }
