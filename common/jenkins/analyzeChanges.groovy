@@ -5,7 +5,9 @@ import groovy.transform.Field
 
 
 def listServices() {
-    def services = sh(script: "ls -1 $WORKSPACE/$servicesFolder/", returnStdout: true).split()
+    def services = sh(script: "ls -1 $WORKSPACE/$servicesFolder/", returnStdout: true)
+      .split()
+      .findAll {!it.endsWith('@tmp')}
     println "Availabe services:\n*${services.join('\n*')}"
     services
 }
