@@ -7,16 +7,10 @@ node {
 
     def servicesToRun = analyzeChanges()
     
-    println('=========')
     println("Running: $servicesToRun")
 
-    stage('Build') {
-        echo 'Building the service'
-    }
-    stage('Service Tests') {
-        echo 'Running service tests'
-    }
-    stage('Deploy') {
-        echo 'Deploying service'
-    }
+    def pipeline = load "$env.WORKSPACE/common/jenkins/pipeline.groovy"
+    def runner = load "$env.WORKSPACE/common/jenkins/runner.groovy"
+
+    runner(servicesToRun, pipeline)    
 }
