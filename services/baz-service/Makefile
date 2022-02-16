@@ -4,5 +4,5 @@ build:
 service-test:
 	echo "Service tests for baz-service"
 
-qa-deploy:
+deploy-qa:
 	echo "Deploying baz-service to QA"
