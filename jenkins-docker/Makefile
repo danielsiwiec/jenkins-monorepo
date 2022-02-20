@@ -10,3 +10,6 @@ run:
   --volume jenkins-docker-certs:/certs/client:ro \
   --volume `pwd`/..:/data \
   jenkins-blueocean
+
+password:
+	docker exec -it jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
