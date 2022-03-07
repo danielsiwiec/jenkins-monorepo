@@ -1,7 +1,7 @@
 build:
 	docker build -t jenkins-blueocean .
 
-run:
+up: build
 	docker run --name jenkins-blueocean --rm --detach \
   --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
@@ -10,6 +10,9 @@ run:
   --volume jenkins-docker-certs:/certs/client:ro \
   --volume `pwd`/..:/data \
   jenkins-blueocean
+
+open:
+	open http://localhost:8080
 
 password:
 	docker exec -it jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
