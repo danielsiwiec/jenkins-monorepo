@@ -1,8 +1,8 @@
 build:
-	docker build -t jenkins-blueocean .
+	@docker build -t jenkins-blueocean .
 
 up: build
-	docker run --name jenkins-blueocean --rm --detach \
+	@docker run --name jenkins-blueocean --rm --detach \
   --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
   --publish 8080:8080 --publish 50000:50000 \
@@ -11,8 +11,9 @@ up: build
   --volume `pwd`/..:/data \
   jenkins-blueocean
 
-open:
-	open http://localhost:8080
+open: password
+	@open http://localhost:8080
 
 password:
-	docker exec -it jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+	@pass=`docker exec -it jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword` && \
+  echo "user:admin/pass:$$pass"
