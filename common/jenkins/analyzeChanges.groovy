@@ -1,10 +1,8 @@
 import groovy.transform.Field
 
-@Field servicesFolder = 'services'
-@Field commonFolder = 'common'
+final def config = load "$WORKSPACE/common/jenkins/config.groovy"
 
-
-def listServices() {
+def listServices(servicesFolder) {
     def services = sh(script: "ls -1 $WORKSPACE/$servicesFolder/", returnStdout: true)
       .split()
       .findAll {!it.endsWith('@tmp')}
@@ -43,20 +41,20 @@ def changedFilesSinceLastPass() {
   files.unique()
 }
 
-def shouldRunAll(files) {
-  def hasChangesInCommon = files.any { it.matches("$commonFolder/.*") }
+def shouldRunAll(files, runAllLocations) {
+  def hasChangesInCommon = files.any { file -> runAllLocations.any { file.matches("$it.*") } }
   def hasChangesInRoot = files.any { !it.contains('/') }
   print "hasChangesInCommon: $hasChangesInCommon, hasChangesInRoot: $hasChangesInRoot, files.isEmpty(): ${files.isEmpty()}"
   hasChangesInCommon || hasChangesInRoot || files.isEmpty()
 }
 
-def changedServices(allServices, changedFiles) {
+def changedServices(allServices, changedFiles, servicesFolder) {
   allServices.findAll { service -> changedFiles.any { it.contains("$servicesFolder/$service") } }
 }
 
 return {
-    def allServices = listServices()
+    def allServices = listServices(config['servicesFolder'])
     def changedFiles = changedFilesSinceLastPass()
 
-    shouldRunAll(changedFiles) ? allServices : changedServices(allServices, changedFiles)
+    shouldRunAll(changedFiles, config['runAllLocations']) ? allServices : changedServices(allServices, changedFiles, config['servicesFolder'])
 }
