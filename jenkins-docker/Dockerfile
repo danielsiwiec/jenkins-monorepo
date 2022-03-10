@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.337-jdk11
+FROM jenkins/jenkins:2.338-jdk11
 USER root
 RUN apt-get update && apt-get install -y lsb-release build-essential
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
@@ -8,5 +8,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
   https://download.docker.com/linux/debian \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 RUN apt-get update && apt-get install -y docker-ce-cli
+COPY config.xml /usr/share/jenkins/ref/jobs/monorepo/config.xml
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean:1.25.2 docker-workflow:1.28"
