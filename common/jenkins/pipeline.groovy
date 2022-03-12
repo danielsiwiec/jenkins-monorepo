@@ -2,21 +2,21 @@
   [
     name    : 'Build',
     command : 'build',
-    common  : false,
+    shared  : false,
   ],
   [
     name    : 'Service Test',
     command : 'service-test',
-    common  : false,
+    shared  : false,
   ],
   [
     name    : 'Deploy to QA',
     command : 'deploy-qa',
-    common  : false,
+    shared  : false,
   ],
   [
     name    : 'E2E QA',
     command : 'e2e-qa',
-    common  : true,
+    shared  : true,
   ]
 ]

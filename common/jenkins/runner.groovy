@@ -6,15 +6,15 @@ def runServiceStep(service, command) {
     }
 }
 
-def runCommonStep(command) {
+def runSharedStep(command) {
     sh "make $command"
 }
 
 
 def execute(step, services) {
   stage(step.name) {
-    if (step.common) {
-        runCommonStep(step.command)
+    if (step.shared) {
+        runSharedStep(step.command)
     } else {
         parallel services.collectEntries {service -> [service, {runServiceStep(service, step.command)}]}
     }
