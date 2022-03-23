@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build & Test') {
+            matrix {
+                axes {
+                    axis {
+                        name 'service'
+                        values 'foo-service', 'bar-service', 'baz-service'
+                    }
+                }
+                when { changeset pattern: "services/$service/*" }
+                stages {
+                    stage('build') {
+                        steps {
+                            dir("services/$service") {
+                                sh "make build"
+                            }
+                        }
+                    }
+                    stage('test') {
+                        steps {
+                            dir("services/$service") {
+                                sh "make service-test"
+                            }
+                        }
+                    }
+                    stage('deploy') {
+                        steps {
+                            dir("services/$service") {
+                                sh "make deploy-qa"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('End to end') {
+            steps {
+                sh "make e2e-qa"
+            }
+        }
+    }
+}
